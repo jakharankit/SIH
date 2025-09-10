@@ -1,0 +1,1836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GramEasy Tech - Smart Education System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #3a6ea5;
+            --secondary: #004e98;
+            --success: #1cc88a;
+            --info: #36b9cc;
+            --warning: #f6c23e;
+            --danger: #e74a3b;
+            --light: #f8f9fc;
+            --dark: #5a5c69;
+        }
+        
+        body {
+            font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+            background-color: #f8f9fc;
+            color: #333;
+        }
+        
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.8rem;
+        }
+        
+        .brand-highlight {
+            color: var(--primary);
+        }
+        
+        .login-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .dashboard-card {
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+            border: none;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.2);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .section-title {
+            position: relative;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: var(--primary);
+        }
+        
+        .face-demo {
+            width: 100%;
+            height: 300px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .face-demo video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1); /* Mirror the camera for better UX */
+        }
+        
+        .face-demo .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 1.2rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .face-demo:hover .overlay {
+            opacity: 1;
+        }
+        
+        .attendance-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .attendance-item {
+            border-left: 3px solid var(--success);
+            margin-bottom: 10px;
+        }
+        
+        .attendance-item.absent {
+            border-left-color: var(--danger);
+        }
+        
+        .learning-card {
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: transform 0.2s;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .learning-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar {
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 1rem;
+            margin: 0.2rem 0;
+            border-radius: 5px;
+        }
+        
+        .sidebar .nav-link:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar .nav-link.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #fff;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .team-section {
+            background-color: #f8f9fc;
+            padding: 3rem 0;
+        }
+        
+        .team-member {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .team-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            border: 5px solid var(--light);
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+        
+        .camera-permission {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .activity-screen {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .progress-bar-activity {
+            height: 10px;
+            border-radius: 5px;
+            background-color: #e9ecef;
+            margin-bottom: 20px;
+        }
+        
+        .progress-bar-activity .progress {
+            height: 100%;
+            border-radius: 5px;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                min-height: auto;
+            }
+        }
+        
+        .btn-gram {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-gram:hover {
+            background-color: var(--secondary);
+            border-color: var(--secondary);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-4 col-sm-8">
+                <div class="login-container">
+                    <div class="text-center mb-4">
+                        <h1 class="h3 text-gray-800">
+                            <i class="fas fa-graduation-cap me-2"></i>
+                            Gram<span class="brand-highlight">Easy</span> Tech
+                        </h1>
+                        <p>Smart Education System</p>
+                    </div>
+                    <form id="loginForm">
+                        <div class="form-group mb-3">
+                            <label for="email">Email Address</label>
+                            <input type="email" class="form-control" id="email" placeholder="name@example.com" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="role">Login as</label>
+                            <select class="form-control" id="role">
+                                <option value="student">Student</option>
+                                <option value="teacher">Teacher</option>
+                                <option value="admin">Administrator</option>
+                                <option value="grameasy">GramEasy Team</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-gram btn-block">Login</button>
+                    </form>
+                    <hr>
+                    <div class="text-center">
+                        <p>Demo Credentials:</p>
+                        <p><strong>Student:</strong> student@example.com / password123</p>
+                        <p><strong>Teacher:</strong> teacher@example.com / password123</p>
+                        <p><strong>Admin:</strong> admin@example.com / password123</p>
+                        <p><strong>GramEasy Team:</strong> grameasy@example.com / teampassword</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="appScreen" class="d-none">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Sidebar -->
+                <div class="col-md-3 col-lg-2 sidebar px-0">
+                    <div class="p-4">
+                        <h5 class="text-center mb-4">
+                            <i class="fas fa-graduation-cap me-2"></i>
+                            Gram<span class="brand-highlight">Easy</span> Tech
+                        </h5>
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#dashboard" data-section="dashboard">
+                                    <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#attendance" data-section="attendance">
+                                    <i class="fas fa-user-check me-2"></i> Attendance
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#learning" data-section="learning">
+                                    <i class="fas fa-brain me-2"></i> Learning
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#analytics" data-section="analytics">
+                                    <i class="fas fa-chart-line me-2"></i> Analytics
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#profile" data-section="profile">
+                                    <i class="fas fa-user me-2"></i> Profile
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#team" data-section="team">
+                                    <i class="fas fa-users me-2"></i> Our Team
+                                </a>
+                            </li>
+                            <li class="nav-item mt-4">
+                                <a class="nav-link" href="#" id="logoutBtn">
+                                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="col-md-9 col-lg-10 ml-sm-auto px-4 py-4">
+                    <!-- Dashboard Section -->
+                    <div id="dashboardSection">
+                        <!-- Dashboard content remains the same as before -->
+                    </div>
+
+                    <!-- Attendance Section -->
+                    <div id="attendanceSection" class="d-none">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Attendance Management</h1>
+                            <div class="btn-toolbar mb-2 mb-md-0">
+                                <div class="btn-group me-2">
+                                    <button type="button" class="btn btn-sm btn-outline-primary" id="startAttendanceBtn">
+                                        <i class="fas fa-play-circle me-1"></i> Start New Session
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-lg-6">
+                                <div class="card dashboard-card">
+                                    <div class="card-header">
+                                        <h6 class="m-0 font-weight-bold text-primary">Facial Recognition</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="face-demo" id="cameraContainer">
+                                            <div class="camera-permission">
+                                                <i class="fas fa-camera fa-3x mb-3 text-secondary"></i>
+                                                <p>Camera access required for facial recognition</p>
+                                                <button class="btn btn-gram mt-2" id="enableCameraBtn">
+                                                    Enable Camera
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-primary w-100" id="markAttendanceBtn" disabled>
+                                            <i class="fas fa-camera me-2"></i> Mark My Attendance
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-6">
+                                <div class="card dashboard-card">
+                                    <div class="card-header">
+                                        <h6 class="m-0 font-weight-bold text-primary">Today's Attendance</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="attendance-list">
+                                            <div class="attendance-item p-3 bg-light">
+                                                <div class="d-flex justify-content-between">
+                                                    <strong>Rahul Sharma</strong>
+                                                    <span class="badge bg-success">Present</span>
+                                                </div>
+                                                <small class="text-muted">Registered at 9:05 AM</small>
+                                            </div>
+                                            
+                                            <div class="attendance-item p-3 bg-light">
+                                                <div class="d-flex justify-content-between">
+                                                    <strong>Priya Patel</strong>
+                                                    <span class="badge bg-success">Present</span>
+                                                </div>
+                                                <small class="text-muted">Registered at 9:07 AM</small>
+                                            </div>
+                                            
+                                            <div class="attendance-item absent p-3 bg-light">
+                                                <div class="d-flex justify-content-between">
+                                                    <strong>Amit Kumar</strong>
+                                                    <span class="badge bg-danger">Absent</span>
+                                                </div>
+                                                <small class="text-muted">Not yet registered</small>
+                                            </div>
+                                            
+                                            <div class="attendance-item p-3 bg-light">
+                                                <div class="d-flex justify-content-between">
+                                                    <strong>Sneha Gupta</strong>
+                                                    <span class="badge bg-success">Present</span>
+                                                </div>
+                                                <small class="text-muted">Registered at 9:10 AM</small>
+                                            </div>
+                                            
+                                            <div class="attendance-item absent p-3 bg-light">
+                                                <div class="d-flex justify-content-between">
+                                                    <strong>Mohammed Khan</strong>
+                                                    <span class="badge bg-danger">Absent</span>
+                                                </div>
+                                                <small class="text-muted">Not yet registered</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card dashboard-card">
+                                    <div class="card-header">
+                                        <h6 class="m-0 font-weight-bold text-primary">Attendance History</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered" id="attendanceHistoryTable" width="100%" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>Mathematics</th>
+                                                        <th>Physics</th>
+                                                        <th>Computer Science</th>
+                                                        <th>Chemistry</th>
+                                                        <th>English</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Mon, 15 May</td>
+                                                        <td><span class="badge bg-success">Present</span></td>
+                                                        <td><span class="badge bg-success">Present</span></td>
+                                                        <td><span class="badge bg-success">Present</span></td>
+                                                        <td><span class="badge bg-danger">Absent</span></td>
+                                                        <td><span class="badge bg-success">Present</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Tue, 16 May</td>
+                                                        <td><span class="badge bg-success">Present</span></td>
+                                                        <td><span class="badge bg-success">Present</span></td>
+                                                        <td><span class="badge bg-warning">Late</span></td>
+                                                        <td><span class="badge bg-success">Present</span></td>
+                                                        <td><span class="badge bg-success">Present</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Wed, 17 May</td>
+                                                        <td><span class="badge bg-success">Present</span></td>
+                                                        <td><span class="badge bg-danger">Absent</span></td>
+                                                        <td><span class="badge bg-success">Present</span></td>
+                                                        <td><span class="badge bg-success">Present</span></td>
+                                                        <td><span class="badge bg-success">Present</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Thu, 18 May</td>
+                                                        <td><span class="badge bg-success">Present</span></td>
+                                                        <td><span class="badge bg-success">Present</span></td>
+                                                        <td><span class="badge bg-success">Present</span></td>
+                                                        <td><span class="badge bg-success">Present</span></td>
+                                                        <td><span class="badge bg-warning">Late</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Fri, 19 May</td>
+                                                        <td><span class="badge bg-success">Present</span></td>
+                                                        <td><span class="badge bg-success">Present</span></td>
+                                                        <td><span class="badge bg-success">Present</span></td>
+                                                        <td><span class="badge bg-success">Present</span></td>
+                                                        <td><span class="badge bg-success">Present</span></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Learning Section -->
+                    <div id="learningSection" class="d-none">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Personalized Learning</h1>
+                            <div class="btn-toolbar mb-2 mb-md-0">
+                                <div class="btn-group me-2">
+                                    <button type="button" class="btn btn-sm btn-outline-primary" id="refreshRecommendationsBtn">
+                                        <i class="fas fa-sync-alt me-1"></i> Refresh Recommendations
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-8">
+                                <div class="card dashboard-card mb-4">
+                                    <div class="card-header">
+                                        <h6 class="m-0 font-weight-bold text-primary">Recommended Activities</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="card learning-card">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Python Data Structures</h5>
+                                                        <p class="card-text">Practice implementing common data structures in Python.</p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="badge bg-info">Computer Science</span>
+                                                            <span class="text-muted"><i class="fas fa-clock me-1"></i> 25 min</span>
+                                                        </div>
+                                                        <div class="mt-3">
+                                                            <button class="btn btn-sm btn-outline-primary start-activity-btn" data-activity="Python Data Structures">
+                                                                Start Activity
+                                                            </button>
+                                                            <button class="btn btn-sm btn-outline-secondary ms-2">
+                                                                Save for Later
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-6">
+                                                <div class="card learning-card">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Resume Writing Workshop</h5>
+                                                        <p class="card-text">Learn how to create an effective resume for job applications.</p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="badge bg-warning">Career Skills</span>
+                                                            <span class="text-muted"><i class="fas fa-clock me-1"></i> 40 min</span>
+                                                        </div>
+                                                        <div class="mt-3">
+                                                            <button class="btn btn-sm btn-outline-primary start-activity-btn" data-activity="Resume Writing Workshop">
+                                                                Start Activity
+                                                            </button>
+                                                            <button class="btn btn-sm btn-outline-secondary ms-2">
+                                                                Save for Later
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-6">
+                                                <div class="card learning-card">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">IoT Fundamentals</h5>
+                                                        <p class="card-text">Introduction to Internet of Things concepts and applications.</p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="badge bg-success">Electronics</span>
+                                                            <span class="text-muted"><i class="fas fa-clock me-1"></i> 35 min</span>
+                                                        </div>
+                                                        <div class="mt-3">
+                                                            <button class="btn btn-sm btn-outline-primary start-activity-btn" data-activity="IoT Fundamentals">
+                                                                Start Activity
+                                                            </button>
+                                                            <button class="btn btn-sm btn-outline-secondary ms-2">
+                                                                Save for Later
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-6">
+                                                <div class="card learning-card">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Machine Learning Basics</h5>
+                                                        <p class="card-text">Understand the fundamentals of ML algorithms and applications.</p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="badge bg-danger">AI</span>
+                                                            <span class="text-muted"><i class="fas fa-clock me-1"></i> 45 min</span>
+                                                        </div>
+                                                        <div class="mt-3">
+                                                            <button class="btn btn-sm btn-outline-primary start-activity-btn" data-activity="Machine Learning Basics">
+                                                                Start Activity
+                                                            </button>
+                                                            <button class="btn btn-sm btn-outline-secondary ms-2">
+                                                                Save for Later
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Activity Screen -->
+                                <div class="activity-screen" id="activityScreen">
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <h4 id="activityTitle">Activity Title</h4>
+                                        <button class="btn btn-sm btn-outline-secondary" id="closeActivityBtn">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="progress-bar-activity">
+                                        <div class="progress" id="activityProgress"></div>
+                                    </div>
+                                    
+                                    <div id="activityContent">
+                                        <p>Activity content will be displayed here...</p>
+                                    </div>
+                                    
+                                    <div class="mt-4">
+                                        <button class="btn btn-gram" id="completeActivityBtn">
+                                            <i class="fas fa-check me-2"></i> Mark as Completed
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="card dashboard-card mb-4">
+                                    <div class="card-header">
+                                        <h6 class="m-0 font-weight-bold text-primary">Learning Progress</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart-pie pt-4 pb-2">
+                                            <canvas id="learningProgressChart" height="250"></canvas>
+                                        </div>
+                                        <div class="mt-4 text-center small">
+                                            <span class="mr-2">
+                                                <i class="fas fa-circle text-primary"></i> Completed
+                                            </span>
+                                            <span class="mr-2">
+                                                <i class="fas fa-circle text-success"></i> In Progress
+                                            </span>
+                                            <span class="mr-2">
+                                                <i class="fas fa-circle text-info"></i> Not Started
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card dashboard-card">
+                                    <div class="card-header">
+                                        <h6 class="m-0 font-weight-bold text-primary">Upcoming Free Periods</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="list-group">
+                                            <div class="list-group-item">
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <h6 class="mb-1">Today, 11:00 - 11:30</h6>
+                                                    <small>30 min</small>
+                                                </div>
+                                                <p class="mb-1">Library</p>
+                                                <small>Python task recommended</small>
+                                            </div>
+                                            <div class="list-group-item">
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <h6 class="mb-1">Tomorrow, 10:30 - 11:00</h6>
+                                                    <small>30 min</small>
+                                                </div>
+                                                <p class="mb-1">Computer Lab</p>
+                                                <small>IoT tutorial recommended</small>
+                                            </div>
+                                            <div class="list-group-item">
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <h6 class="mb-1">Wed, 11:30 - 12:00</h6>
+                                                    <small>30 min</small>
+                                                </div>
+                                                <p class="mb-1">Study Room</p>
+                                                <small>Resume workshop recommended</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Section -->
+                    <div id="analyticsSection" class="d-none">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Advanced Analytics</h1>
+                            <div class="btn-toolbar mb-2 mb-md-0">
+                                <div class="btn-group me-2">
+                                    <button type="button" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-download me-1"></i> Export Report
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="stats-card">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-white-50 text-uppercase mb-1">
+                                                Overall Attendance</div>
+                                            <div class="h5 mb-0 font-weight-bold text-white">87.2%</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-user-check fa-2x text-white-50"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="stats-card" style="background: linear-gradient(135deg, var(--success) 0%, #17a673 100%);">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-white-50 text-uppercase mb-1">
+                                                Learning Completion</div>
+                                            <div class="h5 mb-0 font-weight-bold text-white">72.5%</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-tasks fa-2x text-white-50"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="stats-card" style="background: linear-gradient(135deg, var(--info) 0%, #2c9faf 100%);">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-white-50 text-uppercase mb-1">
+                                                Free Periods Used</div>
+                                            <div class="h5 mb-0 font-weight-bold text-white">62%</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-clock fa-2x text-white-50"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="stats-card" style="background: linear-gradient(135deg, var(--warning) 0%, #dda20a 100%);">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-white-50 text-uppercase mb-1">
+                                                Performance Score</div>
+                                            <div class="h5 mb-0 font-weight-bold text-white">84.3/100</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-chart-line fa-2x text-white-50"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="card dashboard-card mb-4">
+                                    <div class="card-header">
+                                        <h6 class="m-0 font-weight-bold text-primary">Attendance Trend (Last 30 Days)</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart-area">
+                                            <canvas id="attendanceTrendChart" height="250"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="card dashboard-card mb-4">
+                                    <div class="card-header">
+                                        <h6 class="m-0 font-weight-bold text-primary">Subject-wise Performance</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart-pie">
+                                            <canvas id="subjectPerformanceChart" height="250"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card dashboard-card mb-4">
+                                    <div class="card-header">
+                                        <h6 class="m-0 font-weight-bold text-primary">Weekly Activity Breakdown</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart-bar">
+                                            <canvas id="weeklyActivityChart" height="250"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="card dashboard-card mb-4">
+                                    <div class="card-header">
+                                        <h6 class="m-0 font-weight-bold text-primary">Learning Progress by Category</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart-bar">
+                                            <canvas id="categoryProgressChart" height="250"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card dashboard-card">
+                                    <div class="card-header">
+                                        <h6 class="m-0 font-weight-bold text-primary">Detailed Analytics Report</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered" id="analyticsReportTable" width="100%" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Metric</th>
+                                                        <th>This Week</th>
+                                                        <th>Last Week</th>
+                                                        <th>Change</th>
+                                                        <th>Trend</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Overall Attendance</td>
+                                                        <td>89.2%</td>
+                                                        <td>87.5%</td>
+                                                        <td class="text-success">+1.7%</td>
+                                                        <td><i class="fas fa-arrow-up text-success"></i></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Learning Tasks Completed</td>
+                                                        <td>15</td>
+                                                        <td>12</td>
+                                                        <td class="text-success">+3</td>
+                                                        <td><i class="fas fa-arrow-up text-success"></i></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Free Period Utilization</td>
+                                                        <td>68%</td>
+                                                        <td>72%</td>
+                                                        <td class="text-danger">-4%</td>
+                                                        <td><i class="fas fa-arrow-down text-danger"></i></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Performance Score</td>
+                                                        <td>84.3</td>
+                                                        <td>82.1</td>
+                                                        <td class="text-success">+2.2</td>
+                                                        <td><i class="fas fa-arrow-up text-success"></i></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Average Session Time</td>
+                                                        <td>32 min</td>
+                                                        <td>28 min</td>
+                                                        <td class="text-success">+4 min</td>
+                                                        <td><i class="fas fa-arrow-up text-success"></i></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Section -->
+                    <div id="profileSection" class="d-none">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                            <h1 class="h2">User Profile</h1>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="card dashboard-card mb-4">
+                                    <div class="card-body text-center">
+                                        <img src="https://ui-avatars.com/api/?name=Demo+User&size=200&background=3a6ea5&color=fff" alt="Profile" class="profile-img mb-3">
+                                        <h4>Demo User</h4>
+                                        <p class="text-muted mb-1">Student</p>
+                                        <p class="text-muted mb-4">Computer Science Department</p>
+                                        
+                                        <div class="d-flex justify-content-center">
+                                            <button class="btn btn-primary btn-sm me-2">
+                                                <i class="fas fa-upload me-1"></i> Upload Photo
+                                            </button>
+                                            <button class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-sync-alt me-1"></i> Refresh
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card dashboard-card">
+                                    <div class="card-header">
+                                        <h6 class="m-0 font-weight-bold text-primary">Quick Stats</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <p class="text-muted mb-0">Member Since</p>
+                                                <p class="mb-3">Jan 15, 2024</p>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <p class="text-muted mb-0">Last Login</p>
+                                                <p class="mb-3">Today, 09:24 AM</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <p class="text-muted mb-0">Attendance Rate</p>
+                                                <p class="mb-3">87.2%</p>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <p class="text-muted mb-0">Learning Score</p>
+                                                <p class="mb-3">84.3/100</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <p class="text-muted mb-0">Tasks Completed</p>
+                                                <p class="mb-3">14/20</p>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <p class="text-muted mb-0">Current Streak</p>
+                                                <p class="mb-0">9 days</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-8">
+                                <div class="card dashboard-card mb-4">
+                                    <div class="card-header">
+                                        <h6 class="m-0 font-weight-bold text-primary">Personal Information</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="profileForm">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="form-group mb-3">
+                                                        <label for="firstName">First Name</label>
+                                                        <input type="text" class="form-control" id="firstName" value="Demo">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group mb-3">
+                                                        <label for="lastName">Last Name</label>
+                                                        <input type="text" class="form-control" id="lastName" value="User">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="form-group mb-3">
+                                                        <label for="email">Email Address</label>
+                                                        <input type="email" class="form-control" id="profileEmail" value="student@example.com">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group mb-3">
+                                                        <label for="phone">Phone Number</label>
+                                                        <input type="tel" class="form-control" id="phone" value="+91 9876543210">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="form-group mb-3">
+                                                        <label for="department">Department</label>
+                                                        <select class="form-control" id="department">
+                                                            <option selected>Computer Science</option>
+                                                            <option>Electrical Engineering</option>
+                                                            <option>Mechanical Engineering</option>
+                                                            <option>Civil Engineering</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group mb-3">
+                                                        <label for="semester">Semester</label>
+                                                        <select class="form-control" id="semester">
+                                                            <option>1st Semester</option>
+                                                            <option>2nd Semester</option>
+                                                            <option selected>3rd Semester</option>
+                                                            <option>4th Semester</option>
+                                                            <option>5th Semester</option>
+                                                            <option>6th Semester</option>
+                                                            <option>7th Semester</option>
+                                                            <option>8th Semester</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label for="interests">Areas of Interest</label>
+                                                <input type="text" class="form-control" id="interests" value="Machine Learning, Web Development, IoT">
+                                                <div class="form-text">Separate multiple interests with commas</div>
+                                            </div>
+                                            <button type="submit" class="btn btn-gram">Update Profile</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                
+                                <div class="card dashboard-card">
+                                    <div class="card-header">
+                                        <h6 class="m-0 font-weight-bold text-primary">Change Password</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="passwordForm">
+                                            <div class="form-group mb-3">
+                                                <label for="currentPassword">Current Password</label>
+                                                <input type="password" class="form-control" id="currentPassword">
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label for="newPassword">New Password</label>
+                                                <input type="password" class="form-control" id="newPassword">
+                                            </div>
+                                            <div class="form-group mb-4">
+                                                <label for="confirmPassword">Confirm New Password</label>
+                                                <input type="password" class="form-control" id="confirmPassword">
+                                            </div>
+                                            <button type="submit" class="btn btn-gram">Change Password</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team Section -->
+                    <div id="teamSection" class="d-none">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                            <h1 class="h2">GramEasy Tech Team</h1>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 text-center mb-5">
+                                <h3 class="h4">Our Mission</h3>
+                                <p class="lead">"Easy Tech, Impact on Learning" - Creating technology solutions that enhance education and make learning more accessible and effective for everyone.</p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 col-6 mb-4">
+                                <div class="team-member">
+                                    <img src="https://ui-avatars.com/api/?name=Yuvraj+Babbar&size=120&background=3a6ea5&color=fff" alt="Yuvraj Babbar" class="team-img">
+                                    <h4>Yuvraj Babbar</h4>
+                                    <p class="text-muted">Team Lead & Frontend Developer</p>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 col-6 mb-4">
+                                <div class="team-member">
+                                    <img src="https://ui-avatars.com/api/?name=Ankit+Jakhar&size=120&background=004e98&color=fff" alt="Ankit Jakhar" class="team-img">
+                                    <h4>Ankit Jakhar</h4>
+                                    <p class="text-muted">AI Expert & UI Designer</p>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 col-6 mb-4">
+                                <div class="team-member">
+                                    <img src="https://ui-avatars.com/api/?name=Udhav+Munish&size=120&background=1cc88a&color=fff" alt="Udhav Munish" class="team-img">
+                                    <h4>Udhav Munish</h4>
+                                    <p class="text-muted">Backend Developer</p>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 col-6 mb-4">
+                                <div class="team-member">
+                                    <img src="https://ui-avatars.com/api/?name=Harshal+Grover&size=120&background=36b9cc&color=fff" alt="Harshal Grover" class="team-img">
+                                    <h4>Harshal Grover</h4>
+                                    <p class="text-muted">Presentation Maker & UX Designer</p>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 col-6 mb-4">
+                                <div class="team-member">
+                                    <img src="https://ui-avatars.com/api/?name=Jahanvi+Jain&size=120&background=f6c23e&color=fff" alt="Jahanvi Jain" class="team-img">
+                                    <h4>Jahanvi Jain</h4>
+                                    <p class="text-muted">Communication & Research Expert</p>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 col-6 mb-4">
+                                <div class="team-member">
+                                    <img src="https://ui-avatars.com/api/?name=Vanisha+Vashisth&size=120&background=e74a3b&color=fff" alt="Vanisha Vashisth" class="team-img">
+                                    <h4>Vanisha Vashisth</h4>
+                                    <p class="text-muted">Communication & Research Expert</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-5">
+                            <div class="col-12">
+                                <div class="card dashboard-card">
+                                    <div class="card-header">
+                                        <h6 class="m-0 font-weight-bold text-primary">Our Technology Stack</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row text-center">
+                                            <div class="col-md-2 col-4 mb-4">
+                                                <i class="fab fa-react fa-3x text-primary mb-2"></i>
+                                                <p>React.js</p>
+                                            </div>
+                                            <div class="col-md-2 col-4 mb-4">
+                                                <i class="fab fa-node-js fa-3x text-success mb-2"></i>
+                                                <p>Node.js</p>
+                                            </div>
+                                            <div class="col-md-2 col-4 mb-4">
+                                                <i class="fas fa-database fa-3x text-info mb-2"></i>
+                                                <p>MongoDB</p>
+                                            </div>
+                                            <div class="col-md-2 col-4 mb-4">
+                                                <i class="fab fa-python fa-3x text-primary mb-2"></i>
+                                                <p>Python</p>
+                                            </div>
+                                            <div class="col-md-2 col-4 mb-4">
+                                                <i class="fas fa-robot fa-3x text-danger mb-2"></i>
+                                                <p>TensorFlow</p>
+                                            </div>
+                                            <div class="col-md-2 col-4 mb-4">
+                                                <i class="fas fa-camera fa-3x text-warning mb-2"></i>
+                                                <p>OpenCV</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Simulated backend API endpoints
+        const API = {
+            login: '/api/auth/login',
+            attendance: {
+                start: '/api/attendance/start',
+                mark: '/api/attendance/mark',
+                history: '/api/attendance/history'
+            },
+            learning: {
+                recommendations: '/api/learning/recommendations',
+                progress: '/api/learning/progress',
+                start: '/api/learning/start',
+                complete: '/api/learning/complete'
+            },
+            dashboard: {
+                stats: '/api/dashboard/stats'
+            },
+            analytics: {
+                report: '/api/analytics/report'
+            },
+            profile: {
+                update: '/api/profile/update',
+                changePassword: '/api/profile/change-password'
+            }
+        };
+
+        // Current user state
+        let currentUser = null;
+        let cameraStream = null;
+
+        // DOM Elements
+        const loginScreen = document.getElementById('loginScreen');
+        const appScreen = document.getElementById('appScreen');
+        const loginForm = document.getElementById('loginForm');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const navLinks = document.querySelectorAll('.nav-link[data-section]');
+        const sections = {
+            dashboard: document.getElementById('dashboardSection'),
+            attendance: document.getElementById('attendanceSection'),
+            learning: document.getElementById('learningSection'),
+            analytics: document.getElementById('analyticsSection'),
+            profile: document.getElementById('profileSection'),
+            team: document.getElementById('teamSection')
+        };
+        const markAttendanceBtn = document.getElementById('markAttendanceBtn');
+        const startAttendanceBtn = document.getElementById('startAttendanceBtn');
+        const enableCameraBtn = document.getElementById('enableCameraBtn');
+        const cameraContainer = document.getElementById('cameraContainer');
+        const profileForm = document.getElementById('profileForm');
+        const passwordForm = document.getElementById('passwordForm');
+        const startActivityBtns = document.querySelectorAll('.start-activity-btn');
+        const activityScreen = document.getElementById('activityScreen');
+        const activityTitle = document.getElementById('activityTitle');
+        const activityContent = document.getElementById('activityContent');
+        const activityProgress = document.getElementById('activityProgress');
+        const closeActivityBtn = document.getElementById('closeActivityBtn');
+        const completeActivityBtn = document.getElementById('completeActivityBtn');
+        const refreshRecommendationsBtn = document.getElementById('refreshRecommendationsBtn');
+
+        // Initialize the application
+        function initApp() {
+            // Check if user is logged in (in a real app, this would check localStorage or cookies)
+            const isLoggedIn = localStorage.getItem('grameasy_user') !== null;
+            
+            if (isLoggedIn) {
+                showApp();
+                currentUser = JSON.parse(localStorage.getItem('grameasy_user'));
+                updateUIForUser(currentUser.role);
+            } else {
+                showLogin();
+            }
+            
+            setupEventListeners();
+            initCharts();
+        }
+
+        // Show login screen
+        function showLogin() {
+            loginScreen.classList.remove('d-none');
+            appScreen.classList.add('d-none');
+        }
+
+        // Show main application
+        function showApp() {
+            loginScreen.classList.add('d-none');
+            appScreen.classList.remove('d-none');
+        }
+
+        // Update UI based on user role
+        function updateUIForUser(role) {
+            // In a real app, this would show/hide elements based on user role
+            console.log(`Updating UI for ${role} user`);
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Login form submission
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const role = document.getElementById('role').value;
+                
+                // Simulate API call
+                simulateLogin({ email, password, role });
+            });
+
+            // Logout button
+            logoutBtn.addEventListener('click', function() {
+                // Stop camera stream if active
+                if (cameraStream) {
+                    cameraStream.getTracks().forEach(track => track.stop());
+                }
+                
+                localStorage.removeItem('grameasy_user');
+                currentUser = null;
+                showLogin();
+            });
+
+            // Navigation links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const section = this.getAttribute('data-section');
+                    
+                    // Update active nav link
+                    navLinks.forEach(navLink => navLink.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show selected section
+                    Object.values(sections).forEach(sec => sec.classList.add('d-none'));
+                    sections[section].classList.remove('d-none');
+                    
+                    // Initialize charts for analytics section when it's shown
+                    if (section === 'analytics') {
+                        initAnalyticsCharts();
+                    }
+                    
+                    // Stop camera when leaving attendance section
+                    if (section !== 'attendance' && cameraStream) {
+                        cameraStream.getTracks().forEach(track => track.stop());
+                        cameraStream = null;
+                        cameraContainer.innerHTML = `
+                            <div class="camera-permission">
+                                <i class="fas fa-camera fa-3x mb-3 text-secondary"></i>
+                                <p>Camera access required for facial recognition</p>
+                                <button class="btn btn-gram mt-2" id="enableCameraBtn">
+                                    Enable Camera
+                                </button>
+                            </div>
+                        `;
+                        document.getElementById('enableCameraBtn').addEventListener('click', setupCamera);
+                        markAttendanceBtn.disabled = true;
+                    }
+                });
+            });
+
+            // Mark attendance button
+            markAttendanceBtn.addEventListener('click', function() {
+                simulateFacialRecognition();
+            });
+
+            // Start attendance session button (for teachers)
+            startAttendanceBtn.addEventListener('click', function() {
+                simulateStartAttendanceSession();
+            });
+
+            // Enable camera button
+            if (enableCameraBtn) {
+                enableCameraBtn.addEventListener('click', setupCamera);
+            }
+
+            // Profile form submission
+            profileForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                simulateProfileUpdate();
+            });
+
+            // Password form submission
+            passwordForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                simulatePasswordChange();
+            });
+
+            // Start activity buttons
+            startActivityBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const activity = this.getAttribute('data-activity');
+                    startLearningActivity(activity);
+                });
+            });
+
+            // Close activity button
+            closeActivityBtn.addEventListener('click', function() {
+                activityScreen.style.display = 'none';
+            });
+
+            // Complete activity button
+            completeActivityBtn.addEventListener('click', function() {
+                completeLearningActivity();
+            });
+
+            // Refresh recommendations button
+            if (refreshRecommendationsBtn) {
+                refreshRecommendationsBtn.addEventListener('click', function() {
+                    refreshLearningRecommendations();
+                });
+            }
+        }
+
+        // Setup camera for facial recognition
+        async function setupCamera() {
+            try {
+                cameraStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: 'user' } 
+                });
+                
+                cameraContainer.innerHTML = `
+                    <video id="cameraVideo" autoplay playsinline></video>
+                    <div class="face-overlay"></div>
+                `;
+                
+                const video = document.getElementById('cameraVideo');
+                video.srcObject = cameraStream;
+                
+                markAttendanceBtn.disabled = false;
+            } catch (error) {
+                console.error('Error accessing camera:', error);
+                alert('Unable to access camera. Please check permissions.');
+            }
+        }
+
+        // Simulate login API call
+        function simulateLogin(credentials) {
+            // In a real app, this would be an API call to the backend
+            console.log('Logging in with:', credentials);
+            
+            // Mock response
+            const user = {
+                id: 1,
+                name: 'Demo User',
+                email: credentials.email,
+                role: credentials.role,
+                avatar: 'https://ui-avatars.com/api/?name=Demo+User&background=3a6ea5&color=fff'
+            };
+            
+            // Store user data
+            localStorage.setItem('grameasy_user', JSON.stringify(user));
+            currentUser = user;
+            
+            // Update UI
+            showApp();
+            updateUIForUser(user.role);
+            
+            // Show success message
+            alert(`Successfully logged in as ${user.role}`);
+        }
+
+        // Simulate facial recognition
+        function simulateFacialRecognition() {
+            const video = document.getElementById('cameraVideo');
+            
+            // Create canvas to capture image
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            
+            // Draw current video frame to canvas
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            // Show processing state
+            cameraContainer.innerHTML = `
+                <div class="d-flex align-items-center justify-content-center h-100">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary mb-3" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p>Scanning face...</p>
+                    </div>
+                </div>
+            `;
+            
+            // Simulate processing delay
+            setTimeout(function() {
+                cameraContainer.innerHTML = `
+                    <div class="d-flex align-items-center justify-content-center h-100">
+                        <div class="text-center">
+                            <i class="fas fa-check-circle text-success fa-3x mb-3"></i>
+                            <p>Attendance marked successfully!</p>
+                        </div>
+                    </div>
+                `;
+                
+                // Simulate attendance marking in the UI
+                setTimeout(function() {
+                    document.querySelectorAll('.attendance-item.absent').forEach(item => {
+                        if (Math.random() > 0.5) {
+                            item.classList.remove('absent');
+                            item.querySelector('.badge').className = 'badge bg-success';
+                            item.querySelector('.badge').textContent = 'Present';
+                            item.querySelector('.text-muted').textContent = 'Registered just now';
+                        }
+                    });
+                    
+                    // Restore camera after success
+                    setTimeout(() => {
+                        setupCamera();
+                    }, 2000);
+                }, 1000);
+            }, 2000);
+        }
+
+        // Simulate starting an attendance session (for teachers)
+        function simulateStartAttendanceSession() {
+            alert('Attendance session started. Students can now mark their attendance.');
+            markAttendanceBtn.disabled = false;
+        }
+
+        // Simulate profile update
+        function simulateProfileUpdate() {
+            // Get form values
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('profileEmail').value;
+            const phone = document.getElementById('phone').value;
+            const department = document.getElementById('department').value;
+            const semester = document.getElementById('semester').value;
+            const interests = document.getElementById('interests').value;
+            
+            // Show loading state
+            const submitBtn = profileForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
+            submitBtn.disabled = true;
+            
+            // Simulate API call
+            setTimeout(function() {
+                // Update user data in localStorage
+                const user = JSON.parse(localStorage.getItem('grameasy_user'));
+                user.name = `${firstName} ${lastName}`;
+                user.email = email;
+                localStorage.setItem('grameasy_user', JSON.stringify(user));
+                
+                // Update profile image with new initials
+                document.querySelector('.profile-img').src = `https://ui-avatars.com/api/?name=${firstName}+${lastName}&size=200&background=3a6ea5&color=fff`;
+                
+                // Update profile header
+                document.querySelector('#profileSection .card-body.text-center h4').textContent = `${firstName} ${lastName}`;
+                
+                // Show success message
+                alert('Profile updated successfully!');
+                
+                // Reset button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }, 1500);
+        }
+
+        // Simulate password change
+        function simulatePasswordChange() {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Basic validation
+            if (newPassword !== confirmPassword) {
+                alert('New passwords do not match!');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                alert('New password must be at least 6 characters long!');
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = passwordForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Changing...';
+            submitBtn.disabled = true;
+            
+            // Simulate API call
+            setTimeout(function() {
+                // Show success message
+                alert('Password changed successfully!');
+                
+                // Reset form
+                passwordForm.reset();
+                
+                // Reset button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }, 1500);
+        }
+
+        // Start learning activity
+        function startLearningActivity(activityName) {
+            // Show activity screen
+            activityScreen.style.display = 'block';
+            activityTitle.textContent = activityName;
+            
+            // Reset progress
+            activityProgress.style.width = '0%';
+            
+            // Simulate loading activity content
+            activityContent.innerHTML = `
+                <div class="text-center">
+                    <div class="spinner-border text-primary mb-3" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p>Loading activity content...</p>
+                </div>
+            `;
+            
+            // Simulate API call to get activity content
+            setTimeout(() => {
+                activityContent.innerHTML = `
+                    <h5>About this activity:</h5>
+                    <p>This activity will help you develop essential skills in ${activityName}. Follow the instructions below to complete the activity.</p>
+                    
+                    <h5 class="mt-4">Instructions:</h5>
+                    <ol>
+                        <li>Read the provided materials carefully</li>
+                        <li>Complete the practice exercises</li>
+                        <li>Take the assessment quiz</li>
+                        <li>Submit your work for review</li>
+                    </ol>
+                    
+                    <h5 class="mt-4">Materials:</h5>
+                    <div class="list-group">
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="fas fa-file-pdf me-2 text-danger"></i> Study Guide (PDF)
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="fas fa-video me-2 text-primary"></i> Instructional Video
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="fas fa-tasks me-2 text-success"></i> Practice Exercises
+                        </a>
+                    </div>
+                `;
+                
+                // Simulate progress
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += 5;
+                    activityProgress.style.width = `${progress}%`;
+                    
+                    if (progress >= 100) {
+                        clearInterval(progressInterval);
+                    }
+                }, 300);
+            }, 1500);
+        }
+
+        // Complete learning activity
+        function completeLearningActivity() {
+            // Show loading state
+            const originalText = completeActivityBtn.innerHTML;
+            completeActivityBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            completeActivityBtn.disabled = true;
+            
+            // Simulate API call to mark activity as completed
+            setTimeout(() => {
+                // Show success message
+                alert('Activity completed successfully!');
+                
+                // Hide activity screen
+                activityScreen.style.display = 'none';
+                
+                // Reset button
+                completeActivityBtn.innerHTML = originalText;
+                completeActivityBtn.disabled = false;
+                
+                // Update learning progress chart
+                updateLearningProgress();
+            }, 1500);
+        }
+
+        // Refresh learning recommendations
+        function refreshLearningRecommendations() {
+            // Show loading state
+            const originalText = refreshRecommendationsBtn.innerHTML;
+            refreshRecommendationsBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
+            refreshRecommendationsBtn.disabled = true;
+            
+            // Simulate API call to refresh recommendations
+            setTimeout(() => {
+                // Show success message
+                alert('Recommendations refreshed successfully!');
+                
+                // Reset button
+                refreshRecommendationsBtn.innerHTML = '<i class="fas fa-sync-alt me-1"></i> Refresh Recommendations';
+                refreshRecommendationsBtn.disabled = false;
+            }, 1500);
+        }
+
+        // Update learning progress chart
+        function updateLearningProgress() {
+            // This would update the learning progress chart with new data
+            console.log('Updating learning progress chart...');
+        }
+
+        // Initialize charts
+        function initCharts() {
+            // Learning progress chart
+            const learningCtx = document.getElementById('learningProgressChart');
+            if (learningCtx) {
+                new Chart(learningCtx.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Completed', 'In Progress', 'Not Started'],
+                        datasets: [{
+                            data: [45, 30, 25],
+                            backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+                            hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
+                            hoverBorderColor: 'rgba(234, 236, 244, 1)',
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        cutout: '80%',
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Initialize analytics charts
+        function initAnalyticsCharts() {
+            // Attendance trend chart
+            const attendanceTrendCtx = document.getElementById('attendanceTrendChart');
+            if (attendanceTrendCtx) {
+                new Chart(attendanceTrendCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30'],
+                        datasets: [{
+                            label: 'Attendance Rate',
+                            data: [85, 88, 92, 90, 87, 83, 89, 91, 94, 90, 86, 88, 92, 95, 93, 89, 91, 94, 96, 92, 88, 90, 93, 95, 97, 94, 90, 92, 95, 97],
+                            borderColor: '#4e73df',
+                            backgroundColor: 'rgba(78, 115, 223, 0.05)',
+                            pointBackgroundColor: '#4e73df',
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Subject performance chart
+            const subjectPerformanceCtx = document.getElementById('subjectPerformanceChart');
+            if (subjectPerformanceCtx) {
+                new Chart(subjectPerformanceCtx.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Mathematics', 'Physics', 'Computer Science', 'Chemistry', 'English'],
+                        datasets: [{
+                            data: [92, 85, 96, 78, 88],
+                            backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b'],
+                            hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf', '#dda20a', '#be2617'],
+                            hoverBorderColor: 'rgba(234, 236, 244, 1)',
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        cutout: '70%',
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Weekly activity chart
+            const weeklyActivityCtx = document.getElementById('weeklyActivityChart');
+            if (weeklyActivityCtx) {
+                new Chart(weeklyActivityCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                        datasets: [{
+                            label: 'Learning Time (mins)',
+                            data: [45, 38, 52, 42, 35, 20],
+                            backgroundColor: '#4e73df',
+                            hoverBackgroundColor: '#2e59d9',
+                            borderColor: '#4e73df',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Category progress chart
+            const categoryProgressCtx = document.getElementById('categoryProgressChart');
+            if (categoryProgressCtx) {
+                new Chart(categoryProgressCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Computer Science', 'Mathematics', 'Physics', 'Career Skills', 'Electronics'],
+                        datasets: [{
+                            label: 'Completion %',
+                            data: [85, 92, 78, 65, 72],
+                            backgroundColor: '#1cc88a',
+                            hoverBackgroundColor: '#17a673',
+                            borderColor: '#1cc88a',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        maintainAspectRatio: false,
+                        scales: {
+                           x: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Initialize the app when the page loads
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
